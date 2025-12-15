@@ -1,0 +1,43 @@
+[General]                # global options
+job_type = local           # local, sge, pbs, lsf, slurm... (default: sge)
+job_prefix = nextDenovo  # prefix tag for jobs. (default: nextDenovo)
+task = all               # task need to run [all, correct or assemble]. (default: all)
+rewrite = yes             # overwrite existed directory [yes, no]. (default: no)
+deltmp = yes             # delete intermediate results. (default: yes)
+rerun = 3                # re-run unfinished jobs untill finished or reached ${rerun} loops, 0=no. (default: 3)
+parallel_jobs = 10       # number of tasks used to run in parallel. (default: 10)
+input_type = raw         # input reads type [raw, corrected]. (default: raw)
+input_fofn = input.fofn  # input file, one line one file. (required)
+read_type = ont          # {clr, hifi, ont}
+			 # reads type, clr=PacBio continuous long read, hifi=PacBio highly accurate long reads, ont=NanoPore 1D reads. (**required**)
+workdir = NextDenovo     # work directory. (default: ./)
+
+[correct_option]         # options using only in corrected step.
+read_cutoff = 1k         # filter reads with length < read_cutoff. (default: 1k)
+genome_size = 1.5G         # estimated genome size, suffix K/M/G recognized, used to calculate ``seed_cutoff``/``seed_cutfiles``/``blocksize`` and average depth, it can be omitted when manually setting ``seed_cutoff``.
+seed_depth = 30         # expected seed depth, used to calculate ``seed_cutoff``, co-use with ``genome_size``, you can try to set it 30-45 to get a better assembly result. (default: 45)
+seed_cutoff = 0        # minimum seed length, <=0 means calculate it automatically using :ref:`bin/seq_stat <seq_stat>`.
+seed_cutfiles = 2       # split seed reads into ${seed_cutfiles} subfiles. (default: ${pa_correction})
+blocksize = 10g          # block size for parallel running. (default: 10g)
+pa_correction = 15       # number of corrected tasks used to run in parallel. (default: 15)
+minimap2_options_raw = -t 2  #threads 
+                         # minimap2 options, used to find overlaps between raw reads and set PacBio/Nanopore read overlap, see here for details. (required)
+sort_options = -m 1g -t 2 	#threads
+                         # sort options, see here for details.  
+correction_options = -p 1       #threads
+                         # -p, --process, set the number of processes used for correcting. (default: 10)
+                         # -b, --blacklist, disable the filter step and increase more corrected data.
+                         # -s, --split, split the corrected seed with un-corrected regions. (default: False)
+                         # -fast, 0.5-1 times faster mode with a little lower accuracy. (default: False)
+                         # -dbuf, Disable caching 2bit files and reduce ~TOTAL_INPUT_BASES/4 bytes of memory usage. (default:False)
+                         # -max_lq_length, maximum length of a continuous low quality region in a corrected seed, larger max_lq_length will produce more corrected data with lower accuracy. (default: auto [pb/1k, ont/10k])
+
+[assemble_option]
+_random_round_with_less_accuracy = 1	# number of random parameter sets.
+
+minimap2_options_cns = -t 1 -k17 -w17 	#threads
+                         # minimap2 options, used to find overlaps between corrected reads. (default: -k17 -w17)
+minimap2_options_map = -t 1 		#threads
+			# minimap2 options, used to map reads back to the assembly.
+nextgraph_options = -a 1 # nextgraph options, see here for details.
+  
