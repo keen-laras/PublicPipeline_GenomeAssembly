@@ -11,10 +11,10 @@ OUTPUT_PREFIX="{output}"
 export _JAVA_OPTIONS="-Xmx32G"
 
 # SOFTWARE
-YAHS="/opt/software/mambaforge/envs/yahs/bin/yahs"
-SAMTOOLS="/opt/software/mambaforge/envs/yahs/bin/samtools"
-JUICER_PRE="/opt/software/mambaforge/envs/yahs/bin/juicer"
-JUICER_TOOLS="/opt/software/mambaforge/envs/yahs/bin/juicer_tools"
+YAHS="/yahs"
+SAMTOOLS="/samtools"
+JUICER_PRE="/juicer"
+JUICER_TOOLS="/juicer_tools"
 
 
 # ========================== INDEX ==========================
@@ -24,7 +24,7 @@ ${SAMTOOLS} faidx ${REFERENCE_GENOME}
 # ========================== YaHS SCAFFOLDING ==========================
 echo "[Step 2] Running YaHS for scaffolding..."
 ${YAHS} --no-contig-ec --no-scaffold-ec ${REFERENCE_GENOME} ${BED_FILE}
-/opt/software/mambaforge/envs/yahs/bin/yahs --no-contig-ec --no-scaffold-ec 1154.fasta /data/work/hiC/1154/1154/hiC_result_Final/bowtie_results/bwt2/fastq/DP8480016520BR_L01_1_1154_polished_index.bwt2pairs.bam 
+/yahs --no-contig-ec --no-scaffold-ec ${REERENCE_GENOME} bowtie_results/bwt2/{hiC_output}.bam 
 
 # 输出：yahs.out_scaffolds_final.agp / yahs.out.bin / yahs.out_scaffolds_final.fa
 echo "[Info] YaHS scaffolding done."
@@ -33,7 +33,7 @@ echo "[Info] YaHS scaffolding done."
 echo "[Step 3] Running juicer pre (-a) for Juicebox editing..."
 ${JUICER_PRE} pre -a -o out_${OUTPUT_PREFIX} \
     yahs.out.bin yahs.out_scaffolds_final.agp ${REFERENCE_GENOME}.fai > out_${OUTPUT_PREFIX}.log 2>&1
-/opt/software/mambaforge/envs/yahs/bin/juicer pre -a -o out_1154_scaff yahs.out.bin yahs.out_scaffolds_final.agp 1154.fasta.fai > out_1154_scaff.log 2>&1
+/juicer pre -a -o out_1154_scaff yahs.out.bin yahs.out_scaffolds_final.agp 1154.fasta.fai > ${OUTPUT_PREFIX}.log 2>&1
 
 # ========================== ASSEMBLY LENGTHS ==========================
 echo "[Step 4] Extracting assembly size from YaHS log..."
