@@ -3,7 +3,7 @@
 sample=sample_name
 source ~/.bashrc
 cd /workdir/
-source /home/stereonote/miniconda3/bin/activate RepeatModeler
+source activate RepeatModeler
 #make index database
 BuildDatabase -name $sample /path/to/{input}.fa
 #run RepeatModeler to make denovo predict library (-pa 30)==(-treads 120)
