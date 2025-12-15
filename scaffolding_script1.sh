@@ -24,7 +24,7 @@ ${SAMTOOLS} faidx ${REFERENCE_GENOME}
 # ========================== YaHS SCAFFOLDING ==========================
 echo "[Step 2] Running YaHS for scaffolding..."
 ${YAHS} --no-contig-ec --no-scaffold-ec ${REFERENCE_GENOME} ${BED_FILE}
-/yahs --no-contig-ec --no-scaffold-ec ${REERENCE_GENOME} bowtie_results/bwt2/{hiC_output}.bam 
+/yahs --no-contig-ec --no-scaffold-ec ${REERENCE_GENOME} bowtie_results/bwt2/{hiC_output}.bwt2pairs.bam 
 
 # 输出：yahs.out_scaffolds_final.agp / yahs.out.bin / yahs.out_scaffolds_final.fa
 echo "[Info] YaHS scaffolding done."
@@ -33,7 +33,7 @@ echo "[Info] YaHS scaffolding done."
 echo "[Step 3] Running juicer pre (-a) for Juicebox editing..."
 ${JUICER_PRE} pre -a -o out_${OUTPUT_PREFIX} \
     yahs.out.bin yahs.out_scaffolds_final.agp ${REFERENCE_GENOME}.fai > out_${OUTPUT_PREFIX}.log 2>&1
-/juicer pre -a -o out_1154_scaff yahs.out.bin yahs.out_scaffolds_final.agp 1154.fasta.fai > ${OUTPUT_PREFIX}.log 2>&1
+/juicer pre -a -o out_1154_scaff yahs.out.bin yahs.out_scaffolds_final.agp ${REFERENCE_GENOME}.fai > ${OUTPUT_PREFIX}.log 2>&1
 
 # ========================== ASSEMBLY LENGTHS ==========================
 echo "[Step 4] Extracting assembly size from YaHS log..."
