@@ -46,6 +46,14 @@ awk 'BEGIN{while((getline<"evi.keptID.txt")>0) ids[$1]=1}
 cat evi.kept.gff braker.kept_fixed.gff > raw.gff
 sort -k1,1 -k4,4n raw.gff > final.gff
 
+grep ">" all.pep.fa | awk -F ">" '{print $2}' > keep_id_for_gff.txt
+/share/app/gffread/0.12.6/gffread final.gff -o final.fixed.gff
+python /path/to/filter_redundant_gff.py keep_id_for_gff.txt final.fixed.gff tmp.FINAL.gff
+/share/app/gffread/0.12.6/gffread tmp.FINAL.gff -o {output}.FINAL.struc.gff
+
+# transcript + cds generating
+/share/app/gffread/0.12.6/gffread {output}.FINAL.struc.gff -g /path/to/{input}.fasta -w all.transcript.fa -x all.cds.fa
+
 #8. QC
 echo 'Number of Protein Coding Genes:' > qc.txt
 grep ">" all.pep.fa | wc -l >> qc.txt # number of protein coding genes
